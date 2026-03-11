@@ -4,7 +4,7 @@
 This PR includes the full migration of the LoL_BP_Project from local development to GitHub with:
 
 - ✅ Cleaned Git history (previous large-file commits removed)  
-- ✅ Proper usage of Git LFS for large files:  
+- ✅ Proper usage of Git LFS for large files:   
   - `models/pick_lgb_v3.txt`  
   - `data/stats1.csv`  
   - `data/stats2.csv`  
