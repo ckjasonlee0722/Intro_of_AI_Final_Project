@@ -19,8 +19,7 @@ This PR includes the full migration of the LoL_BP_Project from local development
 
 A complete hero recommendation and win rate prediction system for the **Ban/Pick phase** in *League of Legends*. Using historical professional match data, the model predicts the top-k recommended champions and the blue side's real-time win rate at each draft step. The system includes a full **Streamlit** UI that accepts pick/ban inputs and returns live recommendations and win rate curves.
 
-📊 **[View Project Presentation on Canva →](https://www.canva.com/design/DAGpFoveaiY/-CSpY3mvzxdgKGNqt_G2YA/view?utm_content=DAGpFoveaiY&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h5c6f982156)**
-
+📊 **[View Project Presentation (PDF)](.lol banpic recommendation system presentation.pdf)**
 ---
 
 ## 📂 Project Structure
