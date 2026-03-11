@@ -26,37 +26,6 @@ This PR includes the full migration of the LoL_BP_Project from local development
 
 ---
 
-## 🧪 Evaluation vs Spec
-
-| 評分項目                 | 預估得分  | 說明                                                                 |
-|------------------------|---------|--------------------------------------------------------------------|
-| 🎯 Originality (15%)   | 10–12   | 應用於實際選角，模型融合 pick 組合與統計勝率；若能整合 WR 模型得更高             |
-| ⚙️ Difficulty (10%)     | 7       | 中等難度；含模型訓練與推薦，非簡單分類，但可加強應用深度                              |
-| 🗂️ Clarity (15%)        | 13–15   | 文件完整、架構清楚；影片說明補足後應達滿分                                      |
-| ✅ Completeness (50%)   | 38–45   | 目前尚未整合 WR 預測曲線；若補齊分析與應用層面將更完整                           |
-
-> **預估總分：** 78–89/100（若整合勝率曲線與分析，預估可達 90+）
-
----
-
-## 🔜 改進方向
-
-| 功能                | 狀態 | 說明                                         |
-|-------------------|:----:|--------------------------------------------|
-| 勝率預測曲線         | ⛔   | 模型已訓練，尚未整合到 `app.py` 曲線顯示             |
-| 推薦邏輯整合 WR      | ⛔   | 可考慮根據 WR 模型挑選「最大化勝率提升」之英雄            |
-| 模型多版本切換       | ⛔   | 比較 `pick_v2` / `pick_v3` 效果                  |
-| 使用者回饋 / 團隊推薦   | ⛔   | UI 中可納入位置、陣營等更細的互動欄位                  |
-
----
-
-
-## 🎯 目標
-
-**直接部署** `app.py`（含勝率曲線）
-
----
-
 ## 📂 需要的專案結構
 
 ```bash
@@ -77,7 +46,7 @@ LoL_BP_Project/
 
 ---
 
-## ✅ 安裝環境（只需一次）
+## ✅ 安裝環境
 
 ```bash
 conda activate lolbp    # 或你的 Python 環境
@@ -235,51 +204,6 @@ Streamlit 前端 App：
 |    3 | [1]                  | [11, 64]             |            48.7%  |
 |  ... | ...                  | ...                  |             ...   |
 |   10 | [1,105,55,238,61]    | [11,64,103,157,121]  |            59.8%  |
-
----
-
-## 🔍 如何實作
-
-1. **組合中間步驟**  
-   - 以完整 `picks_b`、`picks_r` 列表為基礎  
-2. **計算每步勝率 (Python)**  
-   ```python
-   from copy import deepcopy
-   import pandas as pd
-
-   def compute_progression_wr(picks_b, picks_r, model):
-       progression = []
-       for step in range(1, 11):
-           temp_b = deepcopy(picks_b[:min(step,5)])
-           temp_r = deepcopy(picks_r[:max(0,step-5)])
-           while len(temp_b) < 5:
-               temp_b.append(0)
-           while len(temp_r) < 5:
-               temp_r.append(0)
-           X_step = pd.DataFrame([{
-               **{f"blue{i+1}": temp_b[i] for i in range(5)},
-               **{f"red{i+1}": temp_r[i] for i in range(5)}
-           }])
-           win_prob = model.predict(X_step)[0]
-           progression.append(dict(step=step, blue=temp_b, red=temp_r, wr=win_prob))
-       return progression
-   ```
-3. **在 `app.py` 顯示折線圖**  
-   ```python
-   wr_prog = compute_progression_wr(picks_b, picks_r, WR_MODEL)
-   df_prog = pd.DataFrame(wr_prog).set_index("step")
-   st.line_chart(df_prog["wr"])
-   ```
-
----
-
-## 💡 改進方向與未完成項目
-
-| 功能                        | 狀態  | 說明                                          |
-|----------------------------|:-----:|-----------------------------------------------|
-| Ban/Pick 階段支援          | ✅    | 已整合 DRAFT_PHASES                           |
-| 勝率預測整合                | ⛔     | `wr_lgb_v4.txt` 尚未使用                      |
-| 多模型比較                  | ⛔     | 尚未支援 v2/v3 輸出比較                       |
 
 ---
 _  
